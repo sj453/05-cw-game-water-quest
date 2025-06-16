@@ -12,11 +12,26 @@
     <p class="game-instructions">Collect 20 items to complete the game!</p>
     <div class="stats">
       <p>Cans Collected: <span id="current-cans">0</span></p>
+      <p>Level: <span id="current-level">1</span></p>
       <p>Time Left: <span id="timer">30</span>s</p>
     </div>
     <div id="achievements" class="achievement"></div>
     <div class="game-grid"></div>
-    <button id="start-game">Start Game</button>
+    <div class="button-row">
+      <button id="restart-game" class="restart-btn">Restart</button>
+      <button id="start-game">Start Game</button>
+      <button id="pause-game" class="pause-btn">Pause</button>
+    </div>
+    <div id="confetti-container"></div>
+    <div id="level-message" class="level-message"></div>
+    <div id="welcome-message" class="welcome-message">Collect the clean water to save the people from the thirst</div>
+    <div class="motivational-quotes">
+      <span class="quote top-left">"Every drop counts!"</span>
+      <span class="quote top-right">"You can do it!"</span>
+      <span class="quote bottom-left">"Keep going!"</span>
+      <span class="quote bottom-right">"Save the world, one can at a time!"</span>
+    </div>
+    <div id="dynamic-quote" class="dynamic-quote"></div>
   </div>
   <script src="script.js"></script>
 </body>
