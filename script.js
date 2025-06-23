@@ -196,21 +196,24 @@ function updateGoalText() {
 }
 
 function updateGemDisplay() {
-  const gemBox = document.getElementById('gem-count-center') || document.getElementById('gem-count-top');
+  const gemBox = document.getElementById('gem-count-center');
   if (gemBox) {
     gemBox.innerHTML = '';
-    // Use the diamond emoji instead of an image
-    const gemIcon = document.createElement('span');
-    gemIcon.textContent = '💎';
-    gemIcon.className = 'gem';
-    gemBox.appendChild(gemIcon);
-    // Add the gem count
-    const label = document.createElement('span');
-    label.textContent = ` x${gemCount}`;
-    label.style.marginLeft = '8px';
-    label.style.fontSize = '1.3rem';
-    label.style.color = '#333';
-    gemBox.appendChild(label);
+    for (let i = 0; i < gemCount; i++) {
+      const gem = document.createElement('img');
+      gem.src = 'img/water-can.png'; // Use water can as gem icon, or replace with gem image if available
+      gem.alt = 'Gem';
+      gem.className = 'gem';
+      gemBox.appendChild(gem);
+    }
+    if (gemCount > 0) {
+      const label = document.createElement('span');
+      label.textContent = ` x${gemCount}`;
+      label.style.marginLeft = '8px';
+      label.style.fontSize = '1.3rem';
+      label.style.color = '#333';
+      gemBox.appendChild(label);
+    }
   }
 }
 
