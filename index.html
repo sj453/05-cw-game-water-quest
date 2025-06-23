@@ -9,18 +9,23 @@
 <body>
   <div class="container">
     <h1>Water Quest</h1>
-    <p class="game-instructions">Collect 20 items to complete the game!</p>
+    <p id="goal-text" class="game-instructions">Collect 20 items to complete the game!</p>
+    <div id="gem-count-center" class="gem-count-top"></div>
     <div class="stats">
       <p>Cans Collected: <span id="current-cans">0</span></p>
       <p>Level: <span id="current-level">1</span></p>
       <p>Time Left: <span id="timer">30</span>s</p>
     </div>
-    <div id="achievements" class="achievement"></div>
     <div class="game-grid"></div>
     <div class="button-row">
       <button id="restart-game" class="restart-btn">Restart</button>
       <button id="start-game">Start Game</button>
       <button id="pause-game" class="pause-btn">Pause</button>
+    </div>
+    <div class="difficulty-row">
+      <button id="easy-btn" class="difficulty-btn">Easy</button>
+      <button id="normal-btn" class="difficulty-btn">Normal</button>
+      <button id="hard-btn" class="difficulty-btn">Hard</button>
     </div>
     <div id="confetti-container"></div>
     <div id="level-message" class="level-message"></div>
@@ -33,6 +38,9 @@
     </div>
     <div id="dynamic-quote" class="dynamic-quote"></div>
   </div>
+  <footer class="footer">
+    <a href="https://www.charitywater.org/" target="_blank" rel="noopener" class="charity-link">Learn more at charitywater.org</a>
+  </footer>
   <script src="script.js"></script>
 </body>
 </html>

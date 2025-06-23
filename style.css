@@ -23,28 +23,31 @@ Fonts:
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Proxima Nova', 'Avenir', Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 30px;
-  background-color: #e6f7fa; /* Light calming blue */
-  color: #333;
+  background-color: #f7fafc; /* Lighter, clean background */
+  color: #222;
 }
 
 .container {
-  max-width: 750px;
-  margin: 50px auto;
+  max-width: 800px;
+  margin: 60px auto;
   background-color: #fff;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 48px 32px 40px 32px;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(46, 157, 247, 0.08), 0 1.5px 0 #FFC907;
+  border: 3px solid #FFC907;
 }
 
 h1 {
   text-align: center;
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
+  font-size: 2.7rem;
+  font-weight: 900;
+  margin-bottom: 18px;
+  color: #2E9DF7;
+  letter-spacing: 1.5px;
+  font-family: 'Proxima Nova', 'Avenir', Arial, Helvetica, sans-serif;
 }
 
 h1 img {
@@ -54,9 +57,15 @@ h1 img {
 }
 
 .game-instructions {
-  font-size: 18px;
-  margin-bottom: 30px;
+  font-size: 1.25rem;
+  margin-bottom: 32px;
   text-align: center;
+  color: #159A48;
+  font-weight: 600;
+  background: #e6f7fa;
+  border-radius: 10px;
+  padding: 12px 0;
+  border: 1.5px solid #2E9DF7;
 }
 
 .stats {
@@ -64,28 +73,31 @@ h1 img {
   justify-content: space-around;
   margin-bottom: 30px;
   background-color: #f5f5f5;
-  padding: 15px 0;
-  border-radius: 8px;
+  padding: 18px 0;
+  border-radius: 12px;
+  border: 1.5px solid #FFC907;
+  font-family: 'Proxima Nova', 'Avenir', Arial, Helvetica, sans-serif;
 }
 
 .stats p {
   margin: 0;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: #333;
 }
 
 .game-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+  gap: 18px;
   margin: 0 auto;
-  max-width: 500px;
+  max-width: 520px;
+  margin-bottom: 30px;
 }
 
 .grid-cell {
   background-color: #e8e8e8;
-  border-radius: 8px;
+  border-radius: 14px;
   aspect-ratio: 1;
   display: flex;
   align-items: center;
@@ -94,6 +106,7 @@ h1 img {
   transition: background-color 0.3s;
   position: relative;
   overflow: hidden;
+  border: 2.5px solid #2E9DF7;
 }
 
 .grid-cell.active {
@@ -345,6 +358,99 @@ button {
   letter-spacing: 1px;
   pointer-events: none;
 }
+
+.difficulty-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.difficulty-btn {
+  background: #e6f7fa;
+  color: #2E9DF7;
+  border: 2px solid #2E9DF7;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.difficulty-btn:hover, .difficulty-btn.active {
+  background: #2E9DF7;
+  color: #fff;
+}
+
+.gem-count {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 100;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  user-select: none;
+  pointer-events: none;
+}
+.gem {
+  margin-left: 2px;
+  margin-right: 2px;
+  filter: drop-shadow(0 2px 4px #2E9DF7aa);
+}
+
+.gem-count-top {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.2rem;
+  color: #FFC907;
+  font-weight: bold;
+  letter-spacing: 2px;
+  user-select: none;
+  pointer-events: none;
+  min-height: 40px;
+  z-index: 1002;
+  background: #fff;
+  border-radius: 16px;
+  padding: 8px 28px;
+  box-shadow: 0 2px 8px rgba(46,157,247,0.10);
+  border: 2.5px solid #FFC907;
+}
+.gem-count-top .gem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  margin-right: 8px;
+  margin-left: 0;
+  line-height: 1;
+}
+
+.footer {
+  width: 100%;
+  text-align: center;
+  margin-top: 48px;
+  padding: 24px 0 12px 0;
+  background: none;
+  font-family: 'Proxima Nova', 'Avenir', Arial, Helvetica, sans-serif;
+}
+.charity-link {
+  color: #2E9DF7;
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-decoration: none;
+  border-bottom: 2px solid #FFC907;
+  padding-bottom: 2px;
+  transition: color 0.2s, border 0.2s;
+}
+.charity-link:hover {
+  color: #FFC907;
+  border-bottom: 2px solid #2E9DF7;
+}
+
 @media (max-width: 600px) {
   .container {
     max-width: 98vw;
@@ -398,5 +504,18 @@ button {
     left: 5vw;
     top: 8%;
     transform: none;
+  }
+  .difficulty-row {
+    gap: 7px;
+    margin-bottom: 10px;
+  }
+  .difficulty-btn {
+    font-size: 0.95rem;
+    padding: 7px 8px;
+  }
+  .gem-count {
+    top: 8px;
+    right: 8px;
+    font-size: 1.3rem;
   }
 }

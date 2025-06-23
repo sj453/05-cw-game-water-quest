@@ -6,21 +6,18 @@ let spawnInterval;          // Holds the interval for spawning items
 let timer = 30;
 let timerInterval;
 let currentLevel = 1;
+let difficulty = 'normal'; // 'easy', 'normal', 'hard'
+
 const CANS_PER_LEVEL = 20;
 
-const dynamicQuotes = [
-  "Great start! Keep it up!",
-  "You're making a difference!",
-  "Halfway there!",
-  "Amazing focus!",
-  "Almost at the next level!",
-  "Incredible! Stay sharp!",
-  "You're a water hero!",
-  "Every can helps!",
-  "Don't give up!",
-  "Legend in the making!"
-];
-let lastDynamicQuoteIndex = -1;
+const DIFFICULTY_SETTINGS = {
+  easy:   { cansPerLevel: 15, spawnBase: 1200, spawnStep: 90, minSpawn: 400, timeFirst: 80, timeOther: 40 },
+  normal: { cansPerLevel: 20, spawnBase: 1000, spawnStep: 80, minSpawn: 300, timeFirst: 60, timeOther: 30 },
+  hard:   { cansPerLevel: 25, spawnBase: 800,  spawnStep: 100, minSpawn: 200, timeFirst: 40, timeOther: 20 }
+};
+
+let freebieAvailable = false;
+let gemCount = 0;
 
 // Creates the 3x3 game grid where items will appear
 function createGrid() {
@@ -55,8 +52,17 @@ function spawnWaterCan() {
     if (jug) {
       jug.addEventListener('click', function(e) {
         if (!gameActive) return;
-        currentCans = Math.max(0, currentCans - 1);
-        document.getElementById('current-cans').textContent = currentCans;
+        if (freebieAvailable) {
+          freebieAvailable = false;
+          // Optionally show a message for using the freebie
+          const msg = document.getElementById('level-message');
+          msg.textContent = 'Freebie used! No penalty.';
+          msg.style.display = 'block';
+          setTimeout(() => { msg.style.display = 'none'; }, 1800);
+        } else {
+          currentCans = Math.max(0, currentCans - 1);
+          document.getElementById('current-cans').textContent = currentCans;
+        }
         randomCell.innerHTML = '';
         e.stopPropagation();
       });
@@ -73,10 +79,7 @@ function spawnWaterCan() {
         if (!gameActive) return;
         currentCans++;
         document.getElementById('current-cans').textContent = currentCans;
-        if (currentCans % 7 === 0 && currentCans !== CANS_PER_LEVEL) {
-          showDynamicQuote();
-        }
-        if (currentCans === CANS_PER_LEVEL) {
+        if (currentCans === getCansPerLevel()) {
           showConfetti();
           showLevelMessages(currentLevel + 1);
           // Pause the game at level completion
@@ -145,11 +148,17 @@ function startGame() {
   msg.style.display = 'none';
   msg.classList.remove('game-over');
   // If the player finished a level, reset score for next level
-  if (currentCans === CANS_PER_LEVEL) {
+  if (currentCans === getCansPerLevel()) {
     currentCans = 0;
     document.getElementById('current-cans').textContent = currentCans;
     currentLevel++;
     updateLevelDisplay();
+    checkFreebie();
+    gemCount++;
+    updateGemDisplay();
+    spawnWaterCan.halfwayQuoteShown = false;
+  } else {
+    spawnWaterCan.halfwayQuoteShown = false;
   }
   timer = getLevelTime(currentLevel); // Set timer based on level
   updateTimerDisplay();
@@ -171,6 +180,38 @@ function showGameOver() {
   msg.textContent = 'Game Over!';
   msg.classList.add('game-over');
   msg.style.display = 'block';
+}
+
+// Set active class for selected difficulty button
+function updateDifficultyButtons() {
+  document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(difficulty + '-btn').classList.add('active');
+}
+
+function updateGoalText() {
+  const goalText = document.getElementById('goal-text');
+  if (goalText) {
+    goalText.textContent = `Collect ${getCansPerLevel()} items to complete the level!`;
+  }
+}
+
+function updateGemDisplay() {
+  const gemBox = document.getElementById('gem-count-center') || document.getElementById('gem-count-top');
+  if (gemBox) {
+    gemBox.innerHTML = '';
+    // Use the diamond emoji instead of an image
+    const gemIcon = document.createElement('span');
+    gemIcon.textContent = '💎';
+    gemIcon.className = 'gem';
+    gemBox.appendChild(gemIcon);
+    // Add the gem count
+    const label = document.createElement('span');
+    label.textContent = ` x${gemCount}`;
+    label.style.marginLeft = '8px';
+    label.style.fontSize = '1.3rem';
+    label.style.color = '#333';
+    gemBox.appendChild(label);
+  }
 }
 
 // Set up click handler for the start button
@@ -196,12 +237,35 @@ document.getElementById('restart-game').addEventListener('click', function() {
   endGame();
   currentCans = 0;
   currentLevel = 1;
+  freebieAvailable = false;
+  gemCount = 0;
   document.getElementById('current-cans').textContent = currentCans;
   updateLevelDisplay();
+  updateGemDisplay();
   resetTimer();
   createGrid();
   document.getElementById('pause-game').textContent = 'Pause';
 });
+
+document.getElementById('easy-btn').addEventListener('click', () => setDifficulty('easy'));
+document.getElementById('normal-btn').addEventListener('click', () => setDifficulty('normal'));
+document.getElementById('hard-btn').addEventListener('click', () => setDifficulty('hard'));
+
+function setDifficulty(mode) {
+  difficulty = mode;
+  currentLevel = 1;
+  currentCans = 0;
+  freebieAvailable = false;
+  gemCount = 0;
+  updateLevelDisplay();
+  document.getElementById('current-cans').textContent = currentCans;
+  resetTimer();
+  createGrid();
+  document.getElementById('pause-game').textContent = 'Pause';
+  updateDifficultyButtons();
+  updateGoalText();
+  updateGemDisplay();
+}
 
 function showConfetti() {
   const confettiContainer = document.getElementById('confetti-container');
@@ -240,13 +304,18 @@ function updateLevelDisplay() {
   document.getElementById('current-level').textContent = currentLevel;
 }
 
+function getCansPerLevel() {
+  return DIFFICULTY_SETTINGS[difficulty].cansPerLevel;
+}
+
 function getSpawnIntervalForLevel(level) {
-  // Start at 1000ms, decrease by 80ms per level, minimum 300ms
-  return Math.max(1000 - (level - 1) * 80, 300);
+  const s = DIFFICULTY_SETTINGS[difficulty];
+  return Math.max(s.spawnBase - (level - 1) * s.spawnStep, s.minSpawn);
 }
 
 function getLevelTime(level) {
-  return level <= 5 ? 60 : 30;
+  const s = DIFFICULTY_SETTINGS[difficulty];
+  return level <= 5 ? s.timeFirst : s.timeOther;
 }
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -254,19 +323,24 @@ window.addEventListener('DOMContentLoaded', function() {
   if (welcome) {
     welcome.style.display = 'block';
   }
+  updateDifficultyButtons();
+  updateGoalText();
+  updateGemDisplay();
 });
 
-function showDynamicQuote() {
-  // Pick a random quote different from the last one
-  let idx;
-  do {
-    idx = Math.floor(Math.random() * dynamicQuotes.length);
-  } while (idx === lastDynamicQuoteIndex && dynamicQuotes.length > 1);
-  lastDynamicQuoteIndex = idx;
-  const quoteBox = document.getElementById('dynamic-quote');
-  quoteBox.textContent = dynamicQuotes[idx];
-  quoteBox.style.display = 'block';
+function checkFreebie() {
+  // Grant a freebie after every 5 levels completed (on level 6, 11, 16, ...)
+  if ((currentLevel - 1) > 0 && (currentLevel - 1) % 5 === 0) {
+    freebieAvailable = true;
+    showFreebieMessage();
+  }
+}
+
+function showFreebieMessage() {
+  const msg = document.getElementById('level-message');
+  msg.textContent = 'Freebie Unlocked! Next red jug is safe!';
+  msg.style.display = 'block';
   setTimeout(() => {
-    quoteBox.style.display = 'none';
-  }, 2500);
+    msg.style.display = 'none';
+  }, 3000);
 }
